@@ -113,6 +113,19 @@ def open_workbook(filename=None,
     if file_contents:
         peek = file_contents[:peeksz]
     else:
+        # custum storage
+        try:
+            import dwgstore.storage as dwg
+            import os
+            try:
+                storage_filename = dwg._expand_user(filename)
+                if storage_filename != None and storage_filename != '' and os.path.exists(storage_filename):
+                    filename = storage_filename
+            except:
+                print('dwg error')
+        except:
+            print('cannot load dwg module')
+
         with open(filename, "rb") as f:
             peek = f.read(peeksz)
     if peek == b"PK\x03\x04": # a ZIP file
